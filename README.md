@@ -10,4 +10,8 @@ My GitHub Actions
 
 ### Weather
 
-* ref: [定时发送天气邮件](https://www.ruanyifeng.com/blog/2019/12/github_actions.html)
+ref: [定时发送天气邮件](https://www.ruanyifeng.com/blog/2019/12/github_actions.html)
+
+从中国天气网获取天气信息
+
+## To do
