@@ -3,7 +3,7 @@ name: 'GitHub Actions Weather Bot'
 on:
   push:
   schedule:
-    - cron: '0 21 * * *'
+    - cron: '0 21 * * *' # 国际标准时间21点（北京时间早上5点）运行
 
 jobs:
   bot:
@@ -16,10 +16,10 @@ jobs:
       - name: 'Get Date'
         run: echo "::set-env name=REPORT_DATE::$(TZ=':Asia/Nanjing' date '+%Y-%m-%d %T')"
       - name: 'Send mail'
-        uses: dawidd6/action-send-mail@master
+        uses: dawidd6/action-send-mail@master # 使用别人已经写好的 action
         with:
-          server_address: smtp.live.com
-          server_port: 465
+          server_address: smtp.office365.com
+          server_port: 587
           username: ${{ secrets.HOTMAIL_USERNAME }}
           password: ${{ secrets.HOTMAIL_PASSWD }}
           subject: Nanjing Weather Report (${{env.REPORT_DATE}})
