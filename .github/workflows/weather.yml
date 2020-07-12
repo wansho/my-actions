@@ -18,12 +18,15 @@ jobs:
       - name: 'Send mail'
         uses: dawidd6/action-send-mail@master # 使用别人已经写好的 action
         with:
-          server_address: smtp.163.com
+          server_address: smtp.yandex.com
           server_port: 465
-          username: ${{ secrets.MAIL_163_USERNAME }}
-          password: ${{ secrets.MAIL_163_PWD }}
+          username: ${{ secrets.MAIL_YANDEX_USERNAME }}
+          password: ${{ secrets.MAIL_YANDEX_PASSWD }}
           subject: Nanjing Weather Report (${{env.REPORT_DATE}})
           body: file://result.html
           to: wanshojs@gmail.com
           from: GitHub Actions
           content_type: text/html
+
+# dependence
+# http://help.163.com/09/1223/14/5R7P3QI100753VB8.html
