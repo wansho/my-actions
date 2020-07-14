@@ -24,6 +24,6 @@ jobs:
           password: ${{ secrets.MAIL_YANDEX_PASSWD }}
           subject: Nanjing Weather Report (${{env.REPORT_DATE}})
           body: file://result.html
-          to: 949178872@qq.com
+          to: wanshojs@gmail.com
           from: GitHub Actions
           content_type: text/html
