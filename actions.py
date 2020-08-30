@@ -51,6 +51,5 @@ def get_weather():
 
 if __name__ == '__main__':
     weather = str(get_weather())
-    json_str = json.dumps(weather, indent=4)
-    with open('weather.json', 'w', encoding="utf-8") as json_file:
-        json_file.write(json_str)
+    with open('weather.html', 'w', encoding="utf-8") as json_file:
+        json_file.write(str(weather))
