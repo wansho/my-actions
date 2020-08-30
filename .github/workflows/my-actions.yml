@@ -23,14 +23,14 @@ jobs:
       - name: 'action1'
         run: python actions.py
       - name: 'Send mail'
-          uses: dawidd6/action-send-mail@master # 使用别人已经写好的 action
-          with:
-            server_address: smtp.yandex.com # yandex 不需要认证，yandex 是俄罗斯最受欢迎的邮箱服务
-            server_port: 465
-            username: ${{ secrets.MAIL_YANDEX_USERNAME }}
-            password: ${{ secrets.MAIL_YANDEX_PASSWD }}
-            subject: Nanjing Weather Report (${{env.REPORT_DATE}})
-            body: file://weather.json
-            to: wanshojs@gmail.com
-            from: GitHub Actions
-            content_type: text/html
+        uses: dawidd6/action-send-mail@master # 使用别人已经写好的 action
+        with:
+          server_address: smtp.yandex.com # yandex 不需要认证，yandex 是俄罗斯最受欢迎的邮箱服务
+          server_port: 465
+          username: ${{ secrets.MAIL_YANDEX_USERNAME }}
+          password: ${{ secrets.MAIL_YANDEX_PASSWD }}
+          subject: Nanjing Weather Report (${{env.REPORT_DATE}})
+          body: file://weather.json
+          to: wanshojs@gmail.com
+          from: GitHub Actions
+          content_type: text/html
