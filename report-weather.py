@@ -14,16 +14,19 @@ logger = logging.getLogger(__name__)
 latitude = 118.82
 longitude = 31.89
 
+token = "DaO5SS5YytstuBJd"
 STATUS_OK = "ok"
 API_STATUS_OK = "active"
+
 
 
 def get_weather():
     weather = {}
     # https://api.caiyunapp.com/v2.5/DaO5SS5YytstuBJd/118.82,31.89/weather.json
-    url = "https://api.caiyunapp.com/v2.5/DaO5SS5YytstuBJd/{latitude},{longitude}/weather.json".format(
+    url = "https://api.caiyunapp.com/v2.5/{token}/{latitude},{longitude}/weather.json".format(
         latitude=latitude,
-        longitude=longitude
+        longitude=longitude,
+        token=token
     )
     results = dict(requests.get(url).json())
     # 判断 api 是否返回数据
