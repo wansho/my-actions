@@ -18,3 +18,4 @@ ref: [定时发送天气邮件](https://www.ruanyifeng.com/blog/2019/12/github_a
 
 * 改用 Python 实现各种爬虫，用 shell 脚本不太适合
 * 用字符绘制图表
+* 用 Python 实现发邮件
