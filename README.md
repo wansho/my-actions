@@ -16,8 +16,5 @@ ref: [定时发送天气邮件](https://www.ruanyifeng.com/blog/2019/12/github_a
 
 ## To do
 
-<<<<<<< HEAD
-* 
-=======
 * 改用 Python 实现各种爬虫，用 shell 脚本不太适合
->>>>>>> 03fd4e39d5be5f87f15273ab1bead13e972255ef
+* 用字符绘制图表
