@@ -1,9 +1,5 @@
 # -*- coding:utf-8 -*-
-import os
 import requests
-import hashlib
-import time
-import copy
 import json
 import logging
 
@@ -28,6 +24,7 @@ def get_weather():
         token=token
     )
     results = dict(requests.get(url).json())
+    response_dump(results)
     # 判断 api 是否返回数据
     status = results.get("status")
     api_status = results.get("api_status")
@@ -51,7 +48,14 @@ def get_weather():
     return weather
 
 
+def response_dump(response_dict):
+    """将响应结果存储"""
+    with open("response-data-backup.json", "w") as fw:
+        json.dump(response_dict, fw)
+    logger.info("Response backup success.")
+
+
 if __name__ == '__main__':
     weather = str(get_weather())
-    with open('weather.html', 'w', encoding="utf-8") as json_file:
-        json_file.write(str(weather))
+    with open('weather.html', 'w', encoding="utf-8") as fw:
+        fw.write(str(weather))
