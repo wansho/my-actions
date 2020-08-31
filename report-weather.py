@@ -19,7 +19,6 @@ STATUS_OK = "ok"
 API_STATUS_OK = "active"
 
 
-
 def get_weather():
     weather = {}
     # https://api.caiyunapp.com/v2.5/DaO5SS5YytstuBJd/118.82,31.89/weather.json
