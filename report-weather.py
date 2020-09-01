@@ -38,11 +38,10 @@ def get_weather():
         return weather
     # 获取预测数据
     forecast_keypoint = results["result"]["forecast_keypoint"]
-    # 获取 daily 数据
+    column_weather = ["Location", "forecast_keypoint", "hourly_desc"]
+    weather.update({"forecast_keypoint": forecast_keypoint, "Location": "南京九龙湖"})
+    # 获取 daily 数据 pandas
     daily_data = dict(results["result"]["daily"])
-    if daily_data.get("status", "failed") != STATUS_OK:
-        return weather
-    weather.update({"Location": "南京九龙湖"})
     pd_daily_weather = pd.DataFrame(columns=["date", "temperature_max", "temperature_min", "precipitation_max",
                                              "precipitation_desc", "skycon"])
     pd_daily_precipitation = pd.DataFrame(daily_data["precipitation"])
@@ -57,13 +56,43 @@ def get_weather():
         lambda x: precipitation_2_desc(x)
     )
     pd_daily_weather["skycon"] = pd.DataFrame(daily_data["skycon"])["value"]
-
-    print(pd_daily_weather)
-    temperature = str(daily_data["temperature"][0])
-    skycon = str(daily_data["skycon"][0])
-    weather.update({"daily": {"temperature": temperature, "skycon": skycon},
-                    "forecast_keypoint": forecast_keypoint})
     # 获取实时数据
+    realtime_data = dict(results["result"]["realtime"])
+    realtime_precipitation = realtime_data["precipitation"]["local"]["intensity"]
+    realtime_dict = {"temperature": realtime_data["temperature"],
+                     "skycon": realtime_data["skycon"],
+                     "precipitation": realtime_precipitation,
+                     "precipitation_desc": precipitation_2_desc_radar(realtime_precipitation),
+                     "life_index": realtime_data["life_index"]["comfort"]["desc"]
+                     }
+    pd_realtime_weather = pd.DataFrame(columns=["temperature", "skycon", "precipitation",
+                                              "precipitation_desc", "life_index"])
+    pd_realtime_weather = pd_realtime_weather.append(realtime_dict, ignore_index=True)
+    # 获取 hourly 数据 pandas
+    hourly_data = dict(results["result"]["hourly"])
+    hourly_desc = hourly_data["description"]
+    weather.update({"hourly_desc": hourly_desc})
+    pd_hourly_weather = pd.DataFrame(columns=["datetime", "temperature", "precipitation",
+                                              "precipitation_desc", "skycon"])
+    pd_hourly_precipitation = pd.DataFrame(hourly_data["precipitation"])
+    pd_hourly_weather["datetime"] = pd_hourly_precipitation["datetime"].apply(
+        lambda x: datetime.datetime.strptime(str(x)[: 10] + " " + str(x)[11: 16], "%Y-%m-%d %H:%M")
+    )
+    pd_hourly_temperature = pd.DataFrame(hourly_data["temperature"])
+    pd_hourly_weather["temperature"] = pd_hourly_temperature["value"]
+    pd_hourly_weather["precipitation"] = pd_hourly_precipitation["value"]
+    pd_hourly_weather["precipitation_desc"] = pd_hourly_weather["precipitation"].apply(
+        lambda x: precipitation_2_desc_radar(x)
+    )
+    pd_hourly_weather["skycon"] = pd.DataFrame(hourly_data["skycon"])["value"]
+
+    pd_weather = pd.DataFrame(columns=column_weather)
+    pd_weather = pd_weather.append(weather, ignore_index=True)
+
+    print(pd_hourly_weather)
+    print(pd_daily_weather)
+    print(pd_weather)
+    print(pd_realtime_weather)
 
     return weather
 
@@ -88,6 +117,22 @@ def precipitation_2_desc(precipitation):
     else:
         desc = "暴雨／雪"
     return desc
+
+
+def precipitation_2_desc_radar(precipitation):
+    """描述雷达降水强度"""
+    if precipitation < 0.031:
+        desc = "无雨／雪"
+    elif precipitation < 0.25:
+        desc = "小雨／雪"
+    elif precipitation < 0.35:
+        desc = "中雨／雪"
+    elif precipitation < 0.48:
+        desc = "小雨／雪"
+    else:
+        desc = "暴雨／雪"
+    return desc
+
 
 if __name__ == '__main__':
     weather = str(get_weather())
