@@ -114,7 +114,6 @@ def plot_daily_weather(pd_daily_weather):
     plt.xticks(x, x_labels)
     plt.ylim(-5, 40)
     plt.plot(x, y, "-o")
-    plt.show()
     plt.savefig('test.png')
 
     pass
@@ -161,7 +160,7 @@ if __name__ == '__main__':
     weather = str(get_weather())
     # 存储结果，结果是存储在 Github 提供的虚拟环境中的，还可以再次使用
 
-    with open('weather.html', 'r', encoding="utf-8") as fr:
+    with open('test.html', 'r', encoding="utf-8") as fr:
         ss = fr.read()
 
     with open('weather.html', 'w', encoding="utf-8") as fw:
