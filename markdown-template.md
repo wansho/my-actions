@@ -8,21 +8,15 @@
 
 * **Weather**
 
-  abstract-weather-table
-
-  
+abstract-weather-table
 
 * **Daily-Weather**
 
   daily-weather-table
 
-  
-
 * **Realtime-Weather**
 
   realtime-weather-table
-
-  
 
 * **Hourly-Weather**
 
