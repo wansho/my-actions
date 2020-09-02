@@ -26,11 +26,11 @@
 
 ## 新闻热搜
 
-* Hot-Weibo
+* **Hot-Weibo**
 
   hot-weibo
 
-* Hot-Zhihu
+* **Hot-Zhihu**
 
   hot-zhihu
 
