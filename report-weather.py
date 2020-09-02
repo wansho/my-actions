@@ -1,9 +1,11 @@
 # -*- coding:utf-8 -*-
-import requests
 import json
 import logging
 import datetime
+
+import requests
 import pandas as pd
+import matplotlib.pyplot as plt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -42,8 +44,8 @@ def get_weather():
     weather.update({"forecast_keypoint": forecast_keypoint, "Location": "南京九龙湖"})
     # 获取 daily 数据 pandas
     daily_data = dict(results["result"]["daily"])
-    pd_daily_weather = pd.DataFrame(columns=["date", "temperature_max", "temperature_min", "precipitation_max",
-                                             "precipitation_desc", "skycon"])
+    pd_daily_weather = pd.DataFrame(columns=["date", "temperature_max", "temperature_min",
+                                             "precipitation_desc", "skycon", "precipitation_max"])
     pd_daily_precipitation = pd.DataFrame(daily_data["precipitation"])
     pd_daily_weather["date"] = pd_daily_precipitation["date"].apply(
         lambda x: datetime.datetime.strptime(str(x)[: 10], "%Y-%m-%d")
@@ -66,14 +68,14 @@ def get_weather():
                      "life_index": realtime_data["life_index"]["comfort"]["desc"]
                      }
     pd_realtime_weather = pd.DataFrame(columns=["temperature", "skycon", "precipitation",
-                                              "precipitation_desc", "life_index"])
+                                                "life_index", "precipitation_desc" ])
     pd_realtime_weather = pd_realtime_weather.append(realtime_dict, ignore_index=True)
     # 获取 hourly 数据 pandas
     hourly_data = dict(results["result"]["hourly"])
     hourly_desc = hourly_data["description"]
     weather.update({"hourly_desc": hourly_desc})
-    pd_hourly_weather = pd.DataFrame(columns=["datetime", "temperature", "precipitation",
-                                              "precipitation_desc", "skycon"])
+    pd_hourly_weather = pd.DataFrame(columns=["datetime", "temperature",
+                                              "precipitation_desc", "skycon", "precipitation"])
     pd_hourly_precipitation = pd.DataFrame(hourly_data["precipitation"])
     pd_hourly_weather["datetime"] = pd_hourly_precipitation["datetime"].apply(
         lambda x: datetime.datetime.strptime(str(x)[: 10] + " " + str(x)[11: 16], "%Y-%m-%d %H:%M")
@@ -97,6 +99,15 @@ def get_weather():
     print(pd_realtime_weather)
 
     return pd_daily_weather.to_html()
+
+
+def plot_daily_weather(pd_daily_weather):
+    """绘制图表"""
+    x_labels = [str(date) for date in pd_daily_weather["date"].tolist()]
+    temperature_max_numbers = pd_daily_weather["temperature_max"].tolist()
+    temperature_min_numbers = pd_daily_weather["temperature_min"].tolist()
+    life_index = pd_daily_weather
+    pass
 
 
 def response_dump(response_dict):
