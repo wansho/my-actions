@@ -97,16 +97,26 @@ def get_weather():
     print(pd_daily_weather)
     print(pd_weather)
     print(pd_realtime_weather)
+    plot_daily_weather(pd_daily_weather)
 
     return pd_daily_weather.to_html()
 
 
 def plot_daily_weather(pd_daily_weather):
     """绘制图表"""
-    x_labels = [str(date) for date in pd_daily_weather["date"].tolist()]
-    temperature_max_numbers = pd_daily_weather["temperature_max"].tolist()
-    temperature_min_numbers = pd_daily_weather["temperature_min"].tolist()
-    life_index = pd_daily_weather
+    x_labels = [str(date)[: 10] for date in pd_daily_weather["date"].tolist()]
+    temperature_max_lst = pd_daily_weather["temperature_max"].tolist()
+    temperature_min_lst = pd_daily_weather["temperature_min"].tolist()
+    life_desc = (pd_daily_weather["precipitation_desc"] + pd_daily_weather["skycon"]).tolist()
+    fig = plt.figure()
+    x = list(range(1, len(x_labels) + 1))
+    y = temperature_max_lst
+    plt.xticks(x, x_labels)
+    plt.ylim(-5, 40)
+    plt.plot(x, y, "-o")
+    plt.show()
+    plt.savefig('test.png')
+
     pass
 
 
@@ -150,5 +160,9 @@ def precipitation_2_desc_radar(precipitation):
 if __name__ == '__main__':
     weather = str(get_weather())
     # 存储结果，结果是存储在 Github 提供的虚拟环境中的，还可以再次使用
+
+    with open('weather.html', 'r', encoding="utf-8") as fr:
+        ss = fr.read()
+
     with open('weather.html', 'w', encoding="utf-8") as fw:
-        fw.write(str(weather))
+        fw.write(str(ss))
