@@ -89,12 +89,14 @@ def get_weather():
     pd_weather = pd.DataFrame(columns=column_weather)
     pd_weather = pd_weather.append(weather, ignore_index=True)
 
+    # print(pd_daily_weather.to_string)
+
     print(pd_hourly_weather)
     print(pd_daily_weather)
     print(pd_weather)
     print(pd_realtime_weather)
 
-    return weather
+    return pd_daily_weather.to_html()
 
 
 def response_dump(response_dict):
