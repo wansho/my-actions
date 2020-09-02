@@ -38,13 +38,15 @@ def get_weather():
             api_status=api_status
         ))
         return weather
+
     # 获取预测数据
     forecast_keypoint = results["result"]["forecast_keypoint"]
     column_weather = ["Location", "forecast_keypoint", "hourly_desc"]
     weather.update({"forecast_keypoint": forecast_keypoint, "Location": "南京九龙湖"})
+
     # 获取 daily 数据 pandas
     daily_data = dict(results["result"]["daily"])
-    pd_daily_weather = pd.DataFrame(columns=["date", "temperature_max", "temperature_min",
+    pd_daily_weather = pd.DataFrame(columns=["date", "temperature_min", "temperature_max",
                                              "precipitation_desc", "skycon", "precipitation_max"])
     pd_daily_precipitation = pd.DataFrame(daily_data["precipitation"])
     pd_daily_weather["date"] = pd_daily_precipitation["date"].apply(
@@ -58,6 +60,7 @@ def get_weather():
         lambda x: precipitation_2_desc(x)
     )
     pd_daily_weather["skycon"] = pd.DataFrame(daily_data["skycon"])["value"]
+
     # 获取实时数据
     realtime_data = dict(results["result"]["realtime"])
     realtime_precipitation = realtime_data["precipitation"]["local"]["intensity"]
@@ -70,6 +73,7 @@ def get_weather():
     pd_realtime_weather = pd.DataFrame(columns=["temperature", "skycon", "precipitation",
                                                 "life_index", "precipitation_desc" ])
     pd_realtime_weather = pd_realtime_weather.append(realtime_dict, ignore_index=True)
+
     # 获取 hourly 数据 pandas
     hourly_data = dict(results["result"]["hourly"])
     hourly_desc = hourly_data["description"]
@@ -87,36 +91,40 @@ def get_weather():
         lambda x: precipitation_2_desc_radar(x)
     )
     pd_hourly_weather["skycon"] = pd.DataFrame(hourly_data["skycon"])["value"]
+    pd_hourly_weather = pd_hourly_weather[: 12] # 只选取未来 12 小时的数据
 
+    # 天气概况
     pd_weather = pd.DataFrame(columns=column_weather)
     pd_weather = pd_weather.append(weather, ignore_index=True)
-
-    # print(pd_daily_weather.to_string)
 
     print(pd_hourly_weather)
     print(pd_daily_weather)
     print(pd_weather)
     print(pd_realtime_weather)
-    plot_daily_weather(pd_daily_weather)
+    # plot_daily_weather(pd_daily_weather)
 
-    return pd_daily_weather.to_html()
+    return {"weather": pd_weather,
+            "daily_weather": pd_daily_weather,
+            "realtime_weather": pd_realtime_weather,
+            "hourly_weather": pd_hourly_weather
+            }
 
 
-def plot_daily_weather(pd_daily_weather):
-    """绘制图表"""
-    x_labels = [str(date)[: 10] for date in pd_daily_weather["date"].tolist()]
-    temperature_max_lst = pd_daily_weather["temperature_max"].tolist()
-    temperature_min_lst = pd_daily_weather["temperature_min"].tolist()
-    life_desc = (pd_daily_weather["precipitation_desc"] + pd_daily_weather["skycon"]).tolist()
-    fig = plt.figure()
-    x = list(range(1, len(x_labels) + 1))
-    y = temperature_max_lst
-    plt.xticks(x, x_labels)
-    plt.ylim(-5, 40)
-    plt.plot(x, y, "-o")
-    plt.savefig('test.png')
-
-    pass
+# def plot_daily_weather(pd_daily_weather):
+#     """绘制图表"""
+#     x_labels = [str(date)[: 10] for date in pd_daily_weather["date"].tolist()]
+#     temperature_max_lst = pd_daily_weather["temperature_max"].tolist()
+#     temperature_min_lst = pd_daily_weather["temperature_min"].tolist()
+#     life_desc = (pd_daily_weather["precipitation_desc"] + pd_daily_weather["skycon"]).tolist()
+#     fig = plt.figure()
+#     x = list(range(1, len(x_labels) + 1))
+#     y = temperature_max_lst
+#     plt.xticks(x, x_labels)
+#     plt.ylim(-5, 40)
+#     plt.plot(x, y, "-o")
+#     plt.savefig('test.png')
+#
+#     pass
 
 
 def response_dump(response_dict):
@@ -124,6 +132,24 @@ def response_dump(response_dict):
     with open("response-data-backup.json", "w") as fw:
         json.dump(response_dict, fw)
     logger.info("Response backup success.")
+
+
+def render(dict_pd_data):
+    """渲染 html
+    将天气数据渲染到 html 模板中
+    """
+    # 渲染天气数据
+    html_weather = dict_pd_data["weather"].to_html()
+    html_daily_weather = dict_pd_data["daily_weather"].to_html()
+    html_realtime_weather = dict_pd_data["realtime_weather"].to_html()
+    html_hourly_weather = dict_pd_data["hourly_weather"].to_html()
+    with open('markdown-template.html', 'r', encoding="utf-8") as fr:
+        html_source = fr.read()
+    html = html_source.replace("abstract-weather-table", html_weather)
+    html = html.replace("daily-weather-table", html_daily_weather)
+    html = html.replace("realtime-weather-table", html_realtime_weather)
+    html = html.replace("hourly-weather-table", html_hourly_weather)
+    return html
 
 
 def precipitation_2_desc(precipitation):
@@ -157,11 +183,8 @@ def precipitation_2_desc_radar(precipitation):
 
 
 if __name__ == '__main__':
-    weather = str(get_weather())
+    dict_pd_data = get_weather()
+    html = render(dict_pd_data)
     # 存储结果，结果是存储在 Github 提供的虚拟环境中的，还可以再次使用
-
-    with open('test.html', 'r', encoding="utf-8") as fr:
-        ss = fr.read()
-
     with open('weather.html', 'w', encoding="utf-8") as fw:
-        fw.write(str(ss))
+        fw.write(html)
