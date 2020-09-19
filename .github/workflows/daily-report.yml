@@ -31,6 +31,6 @@ jobs:
           password: ${{ secrets.MAIL_YANDEX_PASSWD }}
           subject: Daily Report
           body: file://weather.html
-          to: wanshojs@gmail.com
+          to: wanshojs@gmail.com, 949178872@qq.com
           from: GitHub Actions
           content_type: text/html
