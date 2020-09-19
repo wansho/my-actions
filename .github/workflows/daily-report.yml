@@ -5,7 +5,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: '0 22,4,10 * * *' # 早上 6 点，中午 12 点，晚上 6 点，一天运行三次
+    - cron: '0 22,4,10 * * *' # 国际标准时间 早上 6 点，中午 12 点，晚上 6 点，一天运行三次
 
 jobs:
   daily-email:
