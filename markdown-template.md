@@ -20,9 +20,10 @@
 
 * **Hourly-Weather**
 
-  hourly-weather-table
-
-
+  <details>
+    <summary>Details</summary>
+  	hourly-weather-table
+  </details>
 
 ## 新闻热搜
 
