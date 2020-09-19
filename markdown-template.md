@@ -27,16 +27,21 @@
 
 ## 新闻热搜
 
-* **Hot-Weibo**
-
-  hot-weibo
-
 * **Hot-Zhihu**
+
+  [知乎热搜](https://www.zhihu.com/hot)
 
   hot-zhihu
 
+* **Hot-Weibo**
+
+  [微博热搜](https://s.weibo.com/top/summary?cate=realtimehot)
+  
+  hot-weibo
+
 ## 每日提醒
 
-- [ ] test1
-- [ ] test2
+- [ ] 健身
+- [ ] 读书
+- [ ] 学技术
 

@@ -19,9 +19,11 @@ jobs:
         with:
           python-version: '3.6'
       - name: 'Install dependencies'
-        run: python -m pip install --upgrade requests pandas matplotlib
-      - name: 'action1'
+        run: python -m pip install --upgrade requests pandas
+      - name: 'action-get-weather'
         run: python report-weather.py
+      - name: 'action-get-hot-topics'
+        run: python report-hot-topics.py
       - name: 'Send mail'
         uses: dawidd6/action-send-mail@master # 使用别人已经写好的 action
         with:
@@ -30,7 +32,7 @@ jobs:
           username: ${{ secrets.MAIL_YANDEX_USERNAME }}
           password: ${{ secrets.MAIL_YANDEX_PASSWD }}
           subject: Daily Report
-          body: file://weather.html
-          to: ${{ secrets.GMAIL }}, ${{ secrets.QQMAIL }}
+          body: file://report.html
+          to:  ${{ secrets.QQMAIL }}, ${{ secrets.GMAIL }}
           from: GitHub Actions
           content_type: text/html

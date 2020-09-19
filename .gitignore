@@ -1,4 +1,5 @@
 .idea/
 weather.html
-response-data-backup.json
+report.html
+response-data-backup*.json
 test.png

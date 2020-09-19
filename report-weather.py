@@ -5,8 +5,8 @@ import datetime
 
 import requests
 import pandas as pd
-import matplotlib.pyplot as plt
 
+pd.set_option('display.max_colwidth', -1)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -46,15 +46,15 @@ def get_weather():
 
     # 获取 daily 数据 pandas
     daily_data = dict(results["result"]["daily"])
-    pd_daily_weather = pd.DataFrame(columns=["date", "temperature_min", "temperature_max",
+    pd_daily_weather = pd.DataFrame(columns=["date", "temp_min", "temp_max",
                                              "precipitation_desc", "skycon", "precipitation_max"])
     pd_daily_precipitation = pd.DataFrame(daily_data["precipitation"])
     pd_daily_weather["date"] = pd_daily_precipitation["date"].apply(
         lambda x: datetime.datetime.strptime(str(x)[: 10], "%Y-%m-%d")
     )
     pd_daily_temperature = pd.DataFrame(daily_data["temperature"])
-    pd_daily_weather["temperature_max"] = pd_daily_temperature["max"]
-    pd_daily_weather["temperature_min"] = pd_daily_temperature["min"]
+    pd_daily_weather["temp_max"] = pd_daily_temperature["max"]
+    pd_daily_weather["temp_min"] = pd_daily_temperature["min"]
     pd_daily_weather["precipitation_max"] = pd_daily_precipitation["max"]
     pd_daily_weather["precipitation_desc"] = pd_daily_weather["precipitation_max"].apply(
         lambda x: precipitation_2_desc(x)
@@ -129,7 +129,7 @@ def get_weather():
 
 def response_dump(response_dict):
     """将响应结果存储"""
-    with open("response-data-backup.json", "w") as fw:
+    with open("response-data-backup-weather.json", "w") as fw:
         json.dump(response_dict, fw)
     logger.info("Response backup success.")
 
@@ -186,5 +186,5 @@ if __name__ == '__main__':
     dict_pd_data = get_weather()
     html = render(dict_pd_data)
     # 存储结果，结果是存储在 Github 提供的虚拟环境中的，还可以再次使用
-    with open('weather.html', 'w', encoding="utf-8") as fw:
+    with open('report.html', 'w', encoding="utf-8") as fw:
         fw.write(html)
