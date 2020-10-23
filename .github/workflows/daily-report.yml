@@ -5,7 +5,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: '30 10 * * *' # 国际标准时间 早上 6点半
+    - cron: '30 22 * * *' # 国际标准时间 早上 6点半
 
 jobs:
   daily-email:
