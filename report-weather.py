@@ -16,7 +16,6 @@ longitude = 31.89
 
 token = "DaO5SS5YytstuBJd"
 STATUS_OK = "ok"
-API_STATUS_OK = "active"
 
 
 def get_weather():
@@ -31,11 +30,9 @@ def get_weather():
     response_dump(results)
     # 判断 api 是否返回数据
     status = results.get("status")
-    api_status = results.get("api_status")
-    if not (status == STATUS_OK and api_status == API_STATUS_OK):
-        logger.error("api 失效，status == {status}, api_status == {apt_status}".format(
+    if not status == STATUS_OK:
+        logger.error("api 失效，status == {status}".format(
             status=status,
-            api_status=api_status
         ))
         return weather
 
